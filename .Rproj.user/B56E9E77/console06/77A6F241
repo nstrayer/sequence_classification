@@ -1,0 +1,5 @@
+bash: /Users/nick/fastAI/aws-alias.sh: No such file or directory
+]0;~/quals/presentation[?1034hnick@Nicks-MBP presentation[32m[00m $ [Knick@Nicks-MBP presentation[32m[00m $ git init
+Initialized empty Git repository in /Users/nick/quals/presentation/.git/
+]0;~/quals/presentationnick@Nicks-MBP presentation[32m[00m $ git remote add origin git@github.com:nstrayer/sequence_classification.git
+]0;~/quals/presentationnick@Nicks-MBP presentation[32m[00m $ lgit "bids prsen[K[K[Kesentation f[Kdraft fo[K[Kdone"

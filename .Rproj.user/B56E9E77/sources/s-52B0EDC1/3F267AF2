@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1510610907811.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3F267AF2",
+    "lastKnownWriteTime" : 1510622415,
+    "last_content_update" : 1510622415268,
+    "path" : "~/quals/presentation/BIDS_Presentation.Rmd",
+    "project_path" : "BIDS_Presentation.Rmd",
+    "properties" : {
+        "cursorPosition" : "21,34",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
