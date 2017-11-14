@@ -32,7 +32,7 @@ class: center, middle, inverse, title-slide
     - Convolutional add-ons
 - Problems &amp; Possible Extensions
     - Sparse Classification
-    - Computational Obsticles
+    - Computational Obstacles
     - Inference
     - Causality
     - Missing Data
@@ -66,7 +66,7 @@ But...
 &gt; A stochastic process has the Markov property if the conditional probability distribution of future states of the process (conditional on both past and present values) depends only upon the present state; that is, given the present, the future does not depend on the past. A process with this property is said to be Markovian or a Markov process. 
 ([Wikipedia Source](https://en.wikipedia.org/wiki/Markov_property))
 
-Think of an individual performing an interval run. Correct classification of the activity will depend on remembering that the user has been alternating between high and low heartrate, something a markov chain can't deal with.
+Think of an individual performing an interval run. Correct classification of the activity will depend on remembering that the user has been alternating between high and low heart rate, something a Markov chain can't deal with.
 
 ---
 ## Don't Electrical Engineers deal with this all the time?
@@ -100,7 +100,7 @@ class: inverse, center, middle
 
 - A linear mapping of inputs that are then 'squashed' by an activation function.
 - Usually stacked in multiple 'layers' such that each layer's output acts as the input to the next layer. 
-- Non-linear and non-convex. Aka trained via gradient descent through a method called "back-propigation."
+- Non-linear and non-convex. Aka trained via gradient descent through a method called "back-propagation."
 
 
 .center[
@@ -121,8 +121,8 @@ class: inverse, center, middle
 ---
 ## Long Short Term Memory models
 
-- RNNs are trained by back propigating through their unrolled computational graph.
-- Because of how backprop works this means repeated multiplication of the gradients, causing them to expload or vanish. 
+- RNNs are trained by back propagating through their unrolled computational graph.
+- Because of how backprop works this means repeated multiplication of the gradients, causing them to explode or vanish. 
 - LSTMs prevent these problems by adding 'gates' that can decide to let through information/ control the flow of the gradient back in time. 
 
 .center[
@@ -158,10 +158,10 @@ class: inverse, center, middle
 ---
 ## Sparse classification solution
 
-- Semi-Supervized learning. 
-- Train an unsupervized model on all available data to find patterns in data
+- Semi-Supervised learning. 
+- Train an unsupervised model on all available data to find patterns in data
   - Which type? 
-- Train supervized model on top of the unsupervized layers. 
+- Train supervised model on top of the unsupervised layers. 
 
 .center[
   &lt;img src = "https://upload.wikimedia.org/wikipedia/commons/d/d0/Example_of_unlabeled_data_in_semisupervised_learning.png" height = 350px/&gt;
@@ -183,15 +183,15 @@ _I googled "computer working hard." [source](https://www.cyberciti.biz/media/new
 
 .pull-left[
 __Parameters__
-  - RNNs reduce parameter numbers by weight sharing but have the afformentioned exploading/vanishing gradient problem
-  - LSTMs help with the vanishing/exploading gradient problem but introduce even more parameters. 
+  - RNNs reduce parameter numbers by weight sharing but have the aforementioned exploding/vanishing gradient problem
+  - LSTMs help with the vanishing/exploding gradient problem but introduce even more parameters. 
   - We can also regularize (L2, L1, ...) but care needs to be taken. 
 ]
 
 .pull-right[
 __Parallelization__
   - We can truncate our sequence length (but we know why that is dangerous)
-  - Some newer architectures forgo RNNs and use exclusively CNNs (Dialated ConvNets) and are thus parallelizable.
+  - Some newer architectures forgo RNNs and use exclusively CNNs (Dilated ConvNets) and are thus parallelizable.
 
 ]
 
@@ -235,9 +235,9 @@ _[source](http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/bidire
 
 .pull-left[
 - What happens when a user takes off their fitbit to charge or a patient misses a scheduled appointment?
-- Simple RNNs make the assumption of evently spaced time intervals. 
-  - Could get around this by feeding info on the time since last visit/ input, but then we have more paremeters. 
-  - Imputation by unsupervized model is another potential, but may have un-obvious feedback effects. 
+- Simple RNNs make the assumption of evenly spaced time intervals. 
+  - Could get around this by feeding info on the time since last visit/ input, but then we have more parameters. 
+  - Imputation by unsupervised model is another potential, but may have un-obvious feedback effects. 
   - Lots to learn from biostats here.
 
 ]
