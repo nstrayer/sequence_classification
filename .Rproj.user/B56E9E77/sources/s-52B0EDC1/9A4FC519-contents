@@ -1,0 +1,241 @@
+---
+title: 'Bios 6301: Assignment 4'
+author: 'Michael Williams'
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+### Grade: 33/50
+
+_If you just forgot to commit your changes to the last problems don't hesitate to let me know and I can give you partial credit for them._
+
+### Question 1 ###
+
+**15 points**
+
+**Write a function that implements the secant algorithm.** Validate your program by finding the root of the function $f(x) = \cos(x) - x$. Compare its performance with the Newton-Raphson method -- which is faster, and by how much?  For this example $f'(x) = -\sin(x) - 1$.
+
+```{r}
+
+#Using secant method, first guesses 1 and 10
+x0 = 1
+x1 = 10
+secant <- function(f, x0 = 1, x1 = 10) {
+  counts = 0
+  while (abs(x0-x1) > .00001) {
+    temp <- x1
+    x1 <- x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0))
+    x0 <- temp
+    counts = counts + 1
+  }
+  c(x1, counts)
+}
+
+f <- function(x)  cos(x)-x
+
+sec <- secant(f, x0, x1)
+
+sprintf("The root found by the secant method is %f and it took %d iterations", sec[1], sec[2])
+
+#Using Newton Raphson, first guess of 10
+
+x1 = 10
+x0 = 0
+count = 0
+while (abs(x0-x1) > .00001) {
+  x0 = x1
+  x1 = x1 - (cos(x1) - x1) / (-sin(x1) - 1)
+  count = count +1
+}
+
+sprintf("The root found by the Newton-Raphson method is %f and it took %d iterations", x1, count)
+```
+Analysis: In this case, the Newton raphson method required many more iteraitons and came to the same root.
+
+__While the number of iterations may be a good indicator you also need to think about how many mathematical operations need to be done at each iteration. What we were looking for here is timing the function execution time over a bunch of runs and averaged. If you do this you will see that the Newton Raphson is the faster algorithm, due to each iteration being more efficient. -3__
+
+### Question 2 ###
+
+**18 points**
+
+Write a program to simulate a game of craps. You can use the following snippet of code to simulate the roll of two (fair) dice:
+
+```{r}
+rollem <- function(ngames = 1){
+  record <- vector("list", ngames)
+  for (i in 1:ngames){
+    x <- sum(ceiling(6*runif(2)))
+    xs <- x
+    xorig <- x
+    winmarker = "loss"
+    if (x == 7) {x = 11; winmarker = "win"}
+    if (x == 11) {winmarker = "win"}
+    while(x != 11) {
+      x <- sum(ceiling(6*runif(2)))
+      xs <- append(xs, x)
+      if (x == 7) {x = 11}
+      if (x == xorig) {x = 11; winmarker = "win"}
+    }
+  record[[i]] <- append(winmarker,xs)
+  
+  }
+  record
+}
+```
+
+1. The instructor should be able to easily import and run your program (function), and obtain output that clearly shows how the game progressed.  Set the RNG seed with `set.seed(100)` and show the output of three games. (lucky 13 points)
+
+```{r}
+set.seed(100)
+rollem(3)
+```
+Analysis: All three games are a loss
+
+1. Find a seed that will win ten straight games.  Consider adding an argument to your function that disables output. Show the output of the ten games. (5 points)
+
+```{r}
+br <- 0
+seed = 0
+while (br == 0) {
+  seed = seed + 1
+  set.seed(seed)
+  x <- rollem(10)
+  if (x[[1]][1] == "win" && x[[2]][1] == "win" && x[[3]][1] == "win" && x[[4]][1] == "win" && x[[5]][1] == "win" && x[[6]][1] == "win" && x[[7]][1] == "win" && x[[8]][1] == "win" && x[[9]][1] == "win" && x[[10]][1] == "win") {br = 1}
+}
+set.seed(seed)
+rollem(10)
+sprintf("The winning seed is %d", seed)
+```
+
+_Correct, however think if you can come up with a more efficient way of testing 10 in a row are wins. Anytime you repeat almost same code a bunch of times it just increases the chances of making a mistake, and time to fix one if you find it._
+
+
+### Question 3 ###
+
+**12 points**
+
+Obtain a copy of the [football-values lecture](https://github.com/couthcommander/football-values).  Save the five 2016 CSV files in your working directory.
+
+Modify the code to create a function.  This function will create dollar values given information (as arguments) about a league setup.  It will return a data.frame and write this data.frame to a CSV file.  The final data.frame should contain the columns 'PlayerName', 'pos', 'points', 'value' and be orderd by value descendingly.  Do not round dollar values.
+
+Note that the returned data.frame should have `sum(posReq)*nTeams` rows.
+
+Define the function as such (6 points):
+
+```{r}
+
+#Order of output is correct but not sure how to convert points to value so using arbitrary 1/10 ratio.
+
+ffvalues <- function(path, file='outfile.csv', nTeams=12, cap=200, posReq=c(qb=1, rb=2, wr=3, te=1, k=1), points=c(fg=4, xpt=1, pass_yds=1/25, pass_tds=4, pass_ints=-2, rush_yds=1/10, rush_tds=6, fumbles=-2, rec_yds=1/20, rec_tds=6)) {
+  
+  # You need to take in the path argument to allow someone else to run this function.
+  # also you are reading in the 2016 years here, not 2017. 
+  
+  setwd("/Users/nick/introComputing/data/football-values/2017")
+  k <- read.csv(  "proj_k17.csv", stringsAsFactors = FALSE)
+  qb <- read.csv("proj_qb17.csv", stringsAsFactors = FALSE)
+  rb <- read.csv("proj_rb17.csv", stringsAsFactors = FALSE)
+  te <- read.csv("proj_te17.csv", stringsAsFactors = FALSE)
+  wr <- read.csv("proj_wr17.csv", stringsAsFactors = FALSE)
+  # k <- read.csv("proj_k16.csv", stringsAsFactors = FALSE)
+  # qb <- read.csv("proj_qb16.csv", stringsAsFactors = FALSE)
+  # rb <- read.csv("proj_rb16.csv", stringsAsFactors = FALSE)
+  # te <- read.csv("proj_te16.csv", stringsAsFactors = FALSE)
+  # wr <- read.csv("proj_wr16.csv", stringsAsFactors = FALSE)
+  df <- data.frame(PlayerName = rep(NA, sum(posReq)*nTeams), pos = rep(NA, sum(posReq)*nTeams), points = rep(NA, sum(posReq)*nTeams), value = rep(NA, sum(posReq)*nTeams))
+  
+  k = cbind(k,points = NA)
+  k$points = k$fg * points[1] + k$xpt * points[2]
+  qb = cbind(qb,points = NA)
+  qb$points = qb$pass_yds * points[3] + qb$pass_tds * points[4] + qb$pass_ints * points[5] + qb$rush_yds * points[6] + qb$rush_tds * points[7] + qb$fumbles * points[8]
+  rb = cbind(rb,points = NA)
+  rb$points =  rb$rush_yds * points[6] + rb$rush_tds * points[7] + rb$fumbles * points[8] + rb$rec_yds * points[9] + rb$rec_tds * points[10]
+  te = cbind(te,points = NA)
+  te$points =  te$fumbles * points[8] + te$rec_yds * points[9] + te$rec_tds * points[10]
+  wr = cbind(wr,points = NA)
+  wr$points =  wr$rush_yds * points[6] + wr$rush_tds * points[7] +wr$fumbles * points[8] + wr$rec_yds * points[9] + wr$rec_tds * points[10]
+  
+  k = cbind(k,value = NA)
+  qb = cbind(qb,value = NA)
+  rb = cbind(rb,value = NA)
+  te = cbind(te,value = NA)
+  wr = cbind(wr,value = NA)
+  
+  k$value = k$points / 10
+  qb$value = qb$points / 10
+  rb$value = rb$points / 10
+  te$value = te$points / 10
+  wr$value = wr$points / 10
+  
+  k = cbind(PlayerName = as.character(k$PlayerName), pos = "k", points = k$points, value = k$value)
+  qb = cbind(PlayerName = as.character(qb$PlayerName), pos = "qb", points = qb$points, value = qb$value)
+  rb = cbind(PlayerName = as.character(rb$PlayerName), pos = "rb", points = rb$points, value = rb$value)
+  te = cbind(PlayerName = as.character(te$PlayerName), pos = "te", points = te$points, value = te$value)
+  wr = cbind(PlayerName = as.character(wr$PlayerName), pos = "wr", points = wr$points, value = wr$value)
+  
+  df = data.frame(rbind(k[1:as.numeric(nTeams*posReq[5]),], qb[1:as.numeric(nTeams*posReq[1]),], rb[1:as.numeric(nTeams*posReq[2]),], te[as.numeric(1:nTeams*posReq[4]),], wr[1:as.numeric(nTeams*posReq[3]),]))
+  
+  #Some issues with levels(?) I did my best to work around
+  df=df[order(as.numeric(levels(df$value))[df$value], decreasing = TRUE),]
+  
+  #Write a CSV to specified path, default name outfile.csv
+  write.csv(df, paste(path, "/" , file, sep=""), row.names = FALSE)  
+  df #Data frame is the output
+}
+
+f <- ffvalues("/Users/michael/Dropbox/BIOS 6301/assig 4")
+f
+
+```
+
+1. Call `x1 <- ffvalues('.')`
+
+    1.  How many players are worth more than $20? (1 point)
+```{r}
+#having too much trouble with levels in dataframe plus not sure how to convert points to value
+#will skip for now
+```
+    1.  Who is 15th most valuable running back (rb)? (1 point)
+
+1. Call `x2 <- ffvalues(getwd(), '16team.csv', nTeams=16, cap=150)`
+
+    1.  How many players are worth more than $20? (1 point)
+    
+    1.  How many wide receivers (wr) are in the top 40? (1 point)
+
+1. Call:
+
+    ```{r eval=FALSE}
+    x3 <- ffvalues('.', 'qbheavy.csv', posReq=c(qb=2, rb=2, wr=3, te=1, k=0),
+            points=c(fg=0, xpt=0, pass_yds=1/25, pass_tds=6, pass_ints=-2,
+                    rush_yds=1/10, rush_tds=6, fumbles=-2, rec_yds=1/20, rec_tds=6))
+    ```
+
+    1.  How many players are worth more than $20? (1 point)
+```{r}
+
+
+```
+    1.  How many quarterbacks (qb) are in the top 30? (1 point)
+
+### Question 4 ###
+
+**5 points**
+
+This code makes a list of all functions in the base package:
+
+```{r eval=FALSE}
+objs <- mget(ls("package:base"), inherits = TRUE)
+funs <- Filter(is.function, objs)
+```
+
+Using this list, write code to answer these questions.
+
+1. Which function has the most arguments? (3 points)
+```{r}
+#skip for now
+```
+1. How many functions have no arguments? (2 points)
+
+Hint: find a function that returns the arguments for a given function.

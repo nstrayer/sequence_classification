@@ -18,6 +18,7 @@ options(htmltools.dir.version = FALSE)
 
 # Outline
 
+.middle[
 - Background
     - What problem are we solving?
     - Why not traditional methods?
@@ -32,6 +33,8 @@ options(htmltools.dir.version = FALSE)
     - Inference
     - Causality
     - Missing Data
+]
+
 ---
 class: inverse, center, middle
 
@@ -139,6 +142,21 @@ class: middle
 <img src = "http://deeplearning.net/software/theano_versions/dev/_images/arbitrary_padding_no_strides_transposed.gif" height = 400px/>
 ]
 
+
+---
+### Example case of wearable data
+
+
+.pull-left[
+
+Pletcher et al. released an [abstract](http://www.abstractsonline.com/pp8/#!/4412/presentation/45220) showing they had developed a high accuracy classifier for cardiovascular risk and sleep apnea using just heart rate and step counts from an apple watch. 
+
+They used a stack of 1d convolution followed by LSTM. 
+]
+.pull-right[
+<img src = "http://files.abstractsonline.com/CTRL/11/d/ae1/2c4/71a/4e1/59a/ff6/988/f89/557/1b/g21042_1.png" height = 400px/>
+]
+
 ---
 class: inverse, center, middle
 
@@ -241,4 +259,25 @@ _[source](http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/bidire
 
 .pull-right[
   ![](figures/missing_data.png)
+]
+
+---
+### Bibliography
+
+.small[
+- Bansal, N. K., Feng, X., Zhang, W., Wei, W., & Zhao, Y. (2012). Modeling Temporal Pattern and Event Detection using Hidden Markov Model with Application to a Sludge Bulking Data. Procedia Computer Science, 12, 218–223. http://doi.org/10.1016/j.procs.2012.09.059
+- Dai, A. M., & Le, Q. V. (2015, November 4). Semi-supervised Sequence Learning. arXiv.org.
+- Gehring, J., Auli, M., Grangier, D., Yarats, D., & Dauphin, Y. N. (2017, May 8). Convolutional Sequence to Sequence Learning. arXiv.org.
+- Jozefowicz, R., Zaremba, W., 32nd, I. S. P. O. T., 2015. (n.d.). An empirical exploration of recurrent network architectures. Jmlr.org.
+- Keren, G., & Schuller, B. (2016, February 18). Convolutional RNN: an Enhanced Model for Extracting Features from Sequential Data. arXiv.org.
+- Lipton, Z. C., Berkowitz, J., & Elkan, C. (2015a, May 29). A Critical Review of Recurrent Neural Networks for Sequence Learning. arXiv.org.
+- Lipton, Z. C., Kale, D. C., Elkan, C., & Wetzel, R. (2015b, November 11). Learning to Diagnose with LSTM Recurrent Neural Networks. arXiv.org.
+- Malhotra, P., TV, V., Vig, L., Agarwal, P., & Shroff, G. (2017). TimeNet - Pre-trained deep recurrent neural network for time series classification. CoRR, cs.LG.
+- Ronald. (2003). Neural Networks for Event Detection from Time Series: A BP Algorithm Approach, 1–10.
+- Schuster, M., Signal, K. P. I. T. O., 1997. (n.d.). Bidirectional recurrent neural networks. Ieeexplore.Ieee.org.
+- Strubell, E., Verga, P., Belanger, D., & McCallum, A. (2017, February 7). Fast and Accurate Entity Recognition with Iterated Dilated Convolutions. arXiv.org.
+- van der Maaten RBM, L., 2009. (n.d.). Learning a parametric embedding by preserving local structure. Jmlr.org.
+Wang, Z., & Oates, T. (2015, May 31). Imaging Time-Series to Improve Classification and Imputation. arXiv.org.
+- Wang, Z., Yan, W., & Oates, T. (2016, November 19). Time Series Classification from Scratch with Deep Neural Networks: A Strong Baseline. arXiv.org.
+- Zhang, X., Kou, W., Chang, E. I.-C., Gao, H., Fan, Y., & Xu, Y. (2017, November 2). Sleep Stage Classification Based on Multi-level Feature Learning and Recurrent Neural Networks via Wearable Device. arXiv.org.
 ]
