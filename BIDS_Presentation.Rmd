@@ -128,6 +128,27 @@ class: inverse, center, middle
 <img src = "http://livefreeordichotomize.com/lstm_explainer/lstm_block.png" height = 400px/>
 ]
 
+---
+## Code example
+
+Train an LSTM to generate musings from Frank Harrell. Is told no words, just character level information. 
+
+```{r, eval = F}
+model <- keras_model_sequential()
+
+model %>%
+  layer_lstm(128, input_shape = c(maxlen, length(chars))) %>%
+  layer_dense(length(chars)) %>%
+  layer_activation("softmax")
+
+model %>% compile(
+  loss = "categorical_crossentropy",
+  optimizer = optimizer_rmsprop(lr = 0.01)
+)
+```
+
+
+> ... subject the probabilities of x = 0.36 = (t) = 0.5528 and survival probable procedures as the residuals with the ordinal probability that the subset from the sample can also be two model predicted residuals and allow as a transformation conved in the full model and the full model
 
 ---
 class: middle
@@ -141,6 +162,7 @@ class: middle
 .pull-right[
 <img src = "http://deeplearning.net/software/theano_versions/dev/_images/arbitrary_padding_no_strides_transposed.gif" height = 400px/>
 ]
+
 
 
 ---
@@ -260,6 +282,7 @@ _[source](http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/bidire
 .pull-right[
   ![](figures/missing_data.png)
 ]
+
 
 ---
 ### Bibliography
