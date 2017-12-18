@@ -24,10 +24,13 @@ options(htmltools.dir.version = FALSE)
     - Why not traditional methods?
     - How does deep learning help?
 - Current Methods
+    - What is a Neural Netowrk?
     - Recurrent Neural Networks
         - Long Short Term Memory models
     - Convolutional Neural Networks
     - Combining CNN and RNNs
+    - Example with wearable data
+    - Example with EHR data
 - Problems & Possible Extensions
     - Sparse Classification
     - Computational Obstacles
@@ -42,13 +45,13 @@ class: inverse, center, middle
 # Background
 ---
 
-# What is continuous classification?
+## What is continuous classification?
 
-The act of getting a continuous stream of input data ($X$) and outputting a prediction of the state or class of the system generating that data at each time point. 
+- The act of getting a continuous stream of input data ( $X$ ) and outputting a prediction of the state or class of the system generating that data at each time point. 
 
 .center[![](figures/continuous_classification.png)]
 
-_Sometimes called sequence labeling._
+- Sometimes called sequence labeling.
 ---
 class: middle
 ## Why not traditional methods?
@@ -60,39 +63,40 @@ Traditional methods have a hard time with:
 
 ---
 
-### Sliding window methods
+## Sliding window methods
 
-A common approach to the problem is to slide window of some width over the data. 
+- A common approach to the problem is to slide window of some width over the data. 
 
-This limits the amount of time back your algorithm can use to infer about the current state 
+- This limits the amount of time back your algorithm can use to infer about the current state 
 
 .center[![](figures/sliding_window.png)]
 
 _This can be viewed as an inifinitely strong prior on time dependency lengths._ 
   
 ---
+class: middle
+## Hidden Markov Models
 
-### Hidden Markov Models
-
-Hidden Markov Models seem a natural fit to these type of data. We have a continuous stream of observed data that we wish to infer an underlying ('hidden') state from. 
+- Hidden Markov Models seem a natural fit to these type of data. We have a continuous stream of observed data that we wish to infer an underlying ('hidden') state from. 
 
 But...
 
 > A stochastic process has the Markov property if the conditional probability distribution of future states of the process (conditional on both past and present values) .highlight[depends only upon the present state;] that is, given the present, the future does not depend on the past. A process with this property is said to be Markovian or a Markov process. 
 ([Wikipedia Source](https://en.wikipedia.org/wiki/Markov_property))
 
-Think of an individual performing an interval run. Correct classification of the activity will depend on remembering that the user has been alternating between high and low heart rate, something a Markov chain can't deal with.
+
+- Think of an individual performing an interval run. Correct classification of the activity will depend on remembering that the user has been alternating between high and low heart rate, something a Markov chain can't deal with.
 
 ---
 
-### Higher order Hidden Markov Models
+## Higher order Hidden Markov Models
 
-The time dependency window of a markov model can be extended, but at the cost of exponentially growing parameters. 
+- The time dependency window of a markov model can be extended, but at the cost of exponentially growing parameters. 
 
 .center[<img height = 300 src = https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/Images/Tensor_2.png />]
 .small[[image source](https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/linear_algebra.html)]
 
-For viewing $\delta$ time steps back in a problem with $k$ possible states, the number of parameters needed to fill the transition matrix is $k^{\delta}$. Aka too big, quick.
+- For viewing $\delta$ time steps back in a problem with $k$ possible states, the number of parameters needed to fill the transition matrix is $k^{\delta}$. Aka too big, quick.
 
 
 ---
@@ -107,14 +111,22 @@ For viewing $\delta$ time steps back in a problem with $k$ possible states, the 
 ---
 ## How does deep learning solve these issues?
 
-- A neural network is a ['universal function approximator,'](http://mcneela.github.io/machine_learning/2017/03/21/Universal-Approximation-Theorem.html) aka with enough data and proper setup we could theoretically do anything with them. 
-- Lots of time and money has been invested in neural nets for time series data thanks to industry applications like Siri and Google Assistant. 
-- Can be setup such that very little prior knowledge is required and features are discovered by the model. (Can we look into the black box?)
+.pull-left[
+- A neural network is a ['universal function approximator,'](http://mcneela.github.io/machine_learning/2017/03/21/Universal-Approximation-Theorem.html) aka with enough data and proper setup we could _theoretically_ do anything with them. 
 
-.center[
-<img src = "https://www.fungglobalretailtech.com/wp-content/uploads/2016/08/Deep-Learning-Neural-Nets01.jpg" height = 300px/>
+- Lots of time and money has been invested in neural nets for time series data thanks to industry applications like Siri and Google Assistant. 
+
+- Can be setup such that very little prior knowledge is required and features are discovered by the model. (Can we look into the black box?)
 ]
-_There really are some amazing datascience stock photos out there._
+
+.pull-right[
+.center[
+<img src = "https://www.fungglobalretailtech.com/wp-content/uploads/2016/08/Deep-Learning-Neural-Nets01.jpg" height = 270px/>]
+
+.small[There really are some amazing datascience stock photos out there.]
+
+]
+
 
 ---
 class: inverse, center, middle
@@ -126,7 +138,10 @@ class: inverse, center, middle
 
 .pull-left.middeling[
 - A linear mapping of inputs that are then 'squashed' by a non-linear activation function.
+
 - Usually stacked in multiple 'layers' such that each layer's output acts as the input to the next layer.
+
+- Really just another machine-learning technique, but a very flexible one.
 ]
 
 .pull-right[
@@ -137,23 +152,23 @@ class: inverse, center, middle
 ---
 ## How do we train them?
 
-While neural networks have been around for a long time, reasonable methods for training didn't really come around till 1986 with the introduction of the back propagation algorithm.
+- While neural networks have been around for a long time (introduced in 1958 by Frank Rosenblatt), reasonable methods for training didn't really come around till 1986 with the introduction of the back propagation algorithm by Geoffrey Hinton.
 
-Back propigation calculates the gradient by applying the chain rule through the computational graph, then gradient descent is used to optimize parameters. 
+- Back propigation calculates the gradient by applying the chain rule through the computational graph, then gradient descent is used to optimize parameters. 
 
 .center[
-  <img height = 300 width = 475 src = figures/backprop.png />
+  <img height = 300 width = 570 src = figures/backprop.png />
 ]
 
 ---
 ## Training is hard
 
 .pull-left.middeling[
-Neural nets are made up of lots of parameters that need to be tuned and thus they need lots of data.
+- Neural nets are made up of lots of parameters that need to be tuned and thus they need lots of data.
 
-In addition, the optimization is non-convex.
+- In addition, the optimization is non-convex.
 
-These combine to make training computationally rigerous.
+- These combine to make training computationally rigerous.
 ]
 
 .pull-right[
@@ -164,9 +179,9 @@ These combine to make training computationally rigerous.
 ## Recurrent Neural Networks
 
 .pull-left[
-- Recurrent Nueral Networks (RNNs) deals with correlation in successive inputs by 'remembering' what it saw at the previous input. 
+- Recurrent Nueral Networks (RNNs) deals with correlation in successive inputs by 'remembering' what they saw at the previous input. 
   
-- Does this by feeding the values of its hidden layers to themselves at the next timestep. 
+- Do this by feeding the values of the hidden layers to themselves at the next timestep. 
   
 - Surprisingly, this cyclical connection doesn't break back-propigation...
 ]
@@ -184,7 +199,7 @@ These combine to make training computationally rigerous.
 
 - When you multiply a state by a weight matrix many time(-steps) in a row you cause its values to either diverge to infinity or shrink to zero. This is known as the exploading and vanishing gradient problem.   
 
-- This problem makes training RNNs to learn long-term time dependencies very hard. 
+- This makes learning long-term time dependencies very hard for RNNs. 
     - Luckily, there are solutions. 
 ]
 
@@ -197,7 +212,7 @@ These combine to make training computationally rigerous.
 ---
 ## Long Short Term Memory models
 
-- LSTMs help control the exploading and vanishing gradient prblem by adding 'gates' that can decide to let through information/ control the flow of the gradient back in time. 
+- LSTMs help control the exploading and vanishing gradient problem by adding 'gates' that can decide to let through information/ control the flow of the gradient back in time. 
 
 - These gates act as mediators for information flow, deciding when the hidden state should be added to, deleted from, and what it should pass on to the next layer. 
 
@@ -217,7 +232,7 @@ model <- keras_model_sequential()
 
 model %>%
   layer_lstm(128, input_shape = c(maxlen, length(chars))) %>%
-  layer_dense(length(chars)) %>%
+  layer_dense(num_characters) %>%
   layer_activation("softmax")
 
 model %>% compile(
@@ -230,12 +245,14 @@ model %>% compile(
 > ... subject the probabilities of x = 0.36 = (t) = 0.5528 and survival probable procedures as the residuals with the ordinal probability that the subset from the sample can also be two model predicted residuals and allow as a transformation conved in the full model and the full model
 
 ---
-## Convolutional Networks
+## Convolutional Networks (CNNs)
 
 .pull-left.middeling[
-- Slides feature detectors sequentially over data to detect features.
+- Slide feature detectors sequentially over data to detect patterns. 
+    - These detectors are learned by the data, not programmed.
 
-- Further layers aggregate those features and make decisions based on their occurance/position.
+
+- Further layers aggregate detected features and make decisions based on their occurance/position.
 
 - Avoids gradient problems from RNNs. 
 ]
@@ -269,6 +286,8 @@ class: middle
 ]
 .pull-right[
 <img src = "http://files.abstractsonline.com/CTRL/11/d/ae1/2c4/71a/4e1/59a/ff6/988/f89/557/1b/g21042_1.png" height = 400px/>
+
+.small[[source](http://www.abstractsonline.com/pp8/#!/4412/presentation/45220)]
 ]
 
 
@@ -279,13 +298,24 @@ class: middle
 
 .pull-left.middeling[
 
-Pletcher et al. released an [abstract](http://www.abstractsonline.com/pp8/#!/4412/presentation/45220) showing they had developed a high accuracy classifier for cardiovascular risk and sleep apnea using just heart rate and step counts from an apple watch. 
+- Pletcher et al. released an [abstract](http://www.abstractsonline.com/pp8/#!/4412/presentation/45220) showing they had developed a high accuracy classifier for cardiovascular risk and sleep apnea using just heart rate and step counts from an apple watch. 
 
-They used a stack of 1d convolution followed by LSTM. 
+- They used a stack of 1d convolution followed by LSTM. 
 ]
 .pull-right.middeling[
 <img src = "https://cdn.vox-cdn.com/thumbor/QlG_H9gwZuRMbganWSVXori9usA=/0x0:3000x1688/920x613/filters:focal(1260x604:1740x1084)/cdn.vox-cdn.com/uploads/chorus_image/image/54787219/App1500x844.0.png" height = 270px/>
 ]
+
+---
+## Predicting 30-day readmission with an RNN
+
+- Using data taken from Vanderbilt's synthetic derivative an LSTM neural network was fed sequential patient data (including IC9/CPT codes, BMI, administered drugs, etc) corresponding to a stay in the hospital and used it to predict if the patient would return in under 30 days. 
+
+.center[
+  <img src = "figures/roc_curves.png" height = 270px/>
+]
+
+- Even with data devoid of time stamps, visits padded/truncated to equal length, and trained on smaller amounts of data than the other models, it was the top performing individual model we surveyed (barely).
 
 ---
 class: inverse, center, middle
@@ -295,22 +325,23 @@ class: inverse, center, middle
 ---
 ## Sparse classification problem
 
-A lot of data, especially human data, has sparse/ inexact labels. 
+- A lot of data, especially human data, has sparse/ inexact labels. 
 
 .center[<img height=350 src="figures/sparse_tags.png" />]
 
-How can we deal with this?
+- How can we deal with this?
 
 ---
 
-### Semi-Supervised learning
+## Semi-Supervised learning
 
-.pull-left.middeling[
-One way is to train an unsupervised model on all available data to find patterns in data
-
-.small[What type of unsupervised model?]
+.pull-left[
+- One way is to train an unsupervised model on all available data to find patterns in data
+    - What type of unsupervised model?
   
-Then we can train a supervised model on top of the unsupervised models layers.
+- Then you can train a supervised model on top of the unsupervised models layers.
+
+- Other methods include classifying unlabeled data and using the classifications as labels to retrain the model.
 ]
 
 .pull-right.center[
@@ -323,9 +354,9 @@ Then we can train a supervised model on top of the unsupervised models layers.
 ## Computational obstacles
 
 .pull-left.middeling[
-__Parameters:__ The flexability of neural networks comes at a cost: lots of parameters. 
+- __Parameters:__ The flexability of neural networks comes at a cost: lots of parameters. 
 
-__Parallelization:__ For RNNs, in order to backpropagate, the computational graph needs to be unrolled limiting parallelization (back propigation through time).
+- __Parallelization:__ For RNNs, in order to backpropagate, the computational graph needs to be unrolled limiting parallelization (back propigation through time).
 ]
 .pull-right.center[
 ![](figures/rnn_unrolled.png)
@@ -405,6 +436,11 @@ _[source](http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/bidire
 .pull-right[
   ![](figures/missing_data.png)
 ]
+
+---
+class: inverse, center, middle
+
+# Questions?
 
 
 ---
