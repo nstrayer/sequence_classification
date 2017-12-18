@@ -106,7 +106,7 @@ But...
 ---
 ## Transformation methods
 
-- Methods like wavelet/fourier transforms are useless when the time series is relatively stable. 
+- Methods like wavelet/Fourier transforms are useless when the time series is relatively stable. 
 - They require large amounts of feature engineering and makes the algorithms less flexible/ portable. 
 
 .center[&lt;img height = 270 src = figures/fourier_transform.png /&gt;]
@@ -127,7 +127,7 @@ But...
 .center[
 &lt;img src = "https://www.fungglobalretailtech.com/wp-content/uploads/2016/08/Deep-Learning-Neural-Nets01.jpg" height = 270px/&gt;]
 
-.small[There really are some amazing datascience stock photos out there.]
+.small[There really are some amazing data science stock photos out there.]
 
 ]
 
@@ -158,7 +158,7 @@ class: inverse, center, middle
 
 - While neural networks have been around for a long time (introduced in 1958 by Frank Rosenblatt), reasonable methods for training didn't really come around till 1986 with the introduction of the back propagation algorithm by Geoffrey Hinton.
 
-- Back propigation calculates the gradient by applying the chain rule through the computational graph, then gradient descent is used to optimize parameters. 
+- Back propagation calculates the gradient by applying the chain rule through the computational graph, then gradient descent is used to optimize parameters. 
 
 .center[
   &lt;img height = 300 width = 570 src = figures/backprop.png /&gt;
@@ -172,7 +172,7 @@ class: inverse, center, middle
 
 - In addition, the optimization is non-convex.
 
-- These combine to make training computationally rigerous.
+- These combine to make training computationally rigorous.
 ]
 
 .pull-right[
@@ -183,11 +183,11 @@ class: inverse, center, middle
 ## Recurrent Neural Networks
 
 .pull-left[
-- Recurrent Nueral Networks (RNNs) deals with correlation in successive inputs by 'remembering' what they saw at the previous input. 
+- Recurrent Neural Networks (RNNs) deals with correlation in successive inputs by 'remembering' what they saw at the previous input. 
   
-- Do this by feeding the values of the hidden layers to themselves at the next timestep. 
+- Do this by feeding the values of the hidden layers to themselves at the next time-step. 
   
-- Surprisingly, this cyclical connection doesn't break back-propigation...
+- Surprisingly, this cyclical connection doesn't break back-propagation...
 ]
 
 .pull-right.center[
@@ -199,9 +199,9 @@ class: inverse, center, middle
 
 .pull-left[
 
-- RNNs are actually feedforward neural networks, that fix the weights of many hidden layers to be the same as each other.
+- RNNs are actually feed-forward neural networks, that fix the weights of many hidden layers to be the same as each other.
 
-- When you multiply a state by a weight matrix many time(-steps) in a row you cause its values to either diverge to infinity or shrink to zero. This is known as the exploading and vanishing gradient problem.   
+- When you multiply a state by a weight matrix many time(-steps) in a row you cause its values to either diverge to infinity or shrink to zero. This is known as the exploding and vanishing gradient problem.   
 
 - This makes learning long-term time dependencies very hard for RNNs. 
     - Luckily, there are solutions. 
@@ -216,7 +216,7 @@ class: inverse, center, middle
 ---
 ## Long Short Term Memory models
 
-- LSTMs help control the exploading and vanishing gradient problem by adding 'gates' that can decide to let through information/ control the flow of the gradient back in time. 
+- LSTMs help control the exploding and vanishing gradient problem by adding 'gates' that can decide to let through information/ control the flow of the gradient back in time. 
 
 - These gates act as mediators for information flow, deciding when the hidden state should be added to, deleted from, and what it should pass on to the next layer. 
 
@@ -257,7 +257,7 @@ model %&gt;% compile(
     - These detectors are learned by the data, not programmed.
 
 
-- Further layers aggregate detected features and make decisions based on their occurance/position.
+- Further layers aggregate detected features and make decisions based on their occurrence/position.
 
 - Avoids gradient problems from RNNs. 
 ]
@@ -359,9 +359,9 @@ class: inverse, center, middle
 ## Computational obstacles
 
 .pull-left.middeling[
-- __Parameters:__ The flexability of neural networks comes at a cost: lots of parameters. 
+- __Parameters:__ The flexibility of neural networks comes at a cost: lots of parameters. 
 
-- __Parallelization:__ For RNNs, in order to backpropagate, the computational graph needs to be unrolled limiting parallelization (back propigation through time).
+- __Parallelization:__ For RNNs, in order to backpropagate, the computational graph needs to be unrolled limiting parallelization (back propagation through time).
 ]
 .pull-right.center[
 ![](figures/rnn_unrolled.png)
@@ -385,7 +385,7 @@ __Parameters__
 __Parallelization__
 - We can truncate our sequence length (but we know why that is dangerous.)
 
-- Switch to an entirely convolutional framework to avoid the problems with back propigation through time. 
+- Switch to an entirely convolutional framework to avoid the problems with back propagation through time. 
 ]
 
 ---
@@ -415,7 +415,7 @@ _Distil.pub's [feature visualization article](https://distill.pub/2017/feature-v
 ---
 ## Causality
 
-- Much like the bias-variance tradeoff in the sequence learning world there is a causality-accuracy tradeoff. 
+- Much like the bias-variance trade off in the sequence learning world there is a causality-accuracy trade off. 
 - If we let the model look forward in time we [tend to get much better performance](https://arxiv.org/abs/1606.06871).
 - However, if we want to either stream live data or attempt to make causal inferences we can't allow going forward in time. 
 
