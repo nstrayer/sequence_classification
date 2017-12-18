@@ -29,8 +29,9 @@ class: center, middle, inverse, title-slide
     - How does deep learning help?
 - Current Methods
     - Recurrent Neural Networks
-    - Long Short Term Memory models
-    - Convolutional add-ons
+        - Long Short Term Memory models
+    - Convolutional Neural Networks
+    - Combining CNN and RNNs
 - Problems &amp; Possible Extensions
     - Sparse Classification
     - Computational Obstacles
@@ -51,35 +52,61 @@ The act of getting a continuous stream of input data ($X$) and outputting a pred
 
 .center[![](figures/continuous_classification.png)]
 
+_Sometimes called sequence labeling._
 ---
+class: middle
 ## Why not traditional methods?
 
-- Traditional methods have a hard time with flexible time dependency windows
-  - They usually use something like a sliding window approach which, by design, limits the amount of time back your algorithm can use to infer about the current situation. This is essentially an inifinitely strong prior. 
-  
-  .center[![](figures/sliding_window.png)]
+Traditional methods have a hard time with:
+
+- Flexible time dependency windows
+- Complex state transition patterns
 
 ---
-## What about Hidden Markov Models?
+
+### Sliding window methods
+
+A common approach to the problem is to slide window of some width over the data. 
+
+This limits the amount of time back your algorithm can use to infer about the current state 
+
+.center[![](figures/sliding_window.png)]
+
+_This can be viewed as an inifinitely strong prior on time dependency lengths._ 
+  
+---
+
+### Hidden Markov Models
 
 Hidden Markov Models seem a natural fit to these type of data. We have a continuous stream of observed data that we wish to infer an underlying ('hidden') state from. 
 
 But...
 
-&gt; A stochastic process has the Markov property if the conditional probability distribution of future states of the process (conditional on both past and present values) depends only upon the present state; that is, given the present, the future does not depend on the past. A process with this property is said to be Markovian or a Markov process. 
+&gt; A stochastic process has the Markov property if the conditional probability distribution of future states of the process (conditional on both past and present values) .highlight[depends only upon the present state;] that is, given the present, the future does not depend on the past. A process with this property is said to be Markovian or a Markov process. 
 ([Wikipedia Source](https://en.wikipedia.org/wiki/Markov_property))
 
 Think of an individual performing an interval run. Correct classification of the activity will depend on remembering that the user has been alternating between high and low heart rate, something a Markov chain can't deal with.
 
 ---
-## Don't Electrical Engineers deal with this all the time?
 
-- They do deal with similar problems, however, the data is almost always oscilatory. 
+### Higher order Hidden Markov Models
+
+The time dependency window of a markov model can be extended, but at the cost of exponentially growing parameters. 
+
+.center[&lt;img height = 300 src = https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/Images/Tensor_2.png /&gt;]
+.small[[image source](https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/linear_algebra.html)]
+
+For viewing `\(\delta\)` time steps back in a problem with `\(k\)` possible states, the number of parameters needed to fill the transition matrix is `\(k^{\delta}\)`. Aka too big, quick.
+
+
+---
+## Transformation methods
+
 - Methods like wavelet/fourier transforms are useless when the time series is relatively stable. 
-- Also, this requires large amounts of engineering and makes the algorithms less flexible. 
+- They require large amounts of feature engineering and makes the algorithms less flexible/ portable. 
 
-.center[![](https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera.s3.amazonaws.com/topics/dsp/large-icon.png)]
-[source](https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera.s3.amazonaws.com/topics/dsp/large-icon.png)
+.center[&lt;img height = 270 src = figures/fourier_transform.png /&gt;]
+.small[[source](https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera.s3.amazonaws.com/topics/dsp/large-icon.png)]
 
 ---
 ## How does deep learning solve these issues?
@@ -101,41 +128,93 @@ class: inverse, center, middle
 ---
 ## What is a (typical) Neural Network?
 
-- A linear mapping of inputs that are then 'squashed' by an activation function.
-- Usually stacked in multiple 'layers' such that each layer's output acts as the input to the next layer. 
-- Non-linear and non-convex. Aka trained via gradient descent through a method called "back-propagation."
+.pull-left.middeling[
+- A linear mapping of inputs that are then 'squashed' by a non-linear activation function.
+- Usually stacked in multiple 'layers' such that each layer's output acts as the input to the next layer.
+]
 
+.pull-right[
+  &lt;img height = 400 width = 350 src = figures/computation_graph.png /&gt;
+]
+
+
+---
+## How do we train them?
+
+While neural networks have been around for a long time, reasonable methods for training didn't really come around till 1986 with the introduction of the back propagation algorithm.
+
+Back propigation calculates the gradient by applying the chain rule through the computational graph, then gradient descent is used to optimize parameters. 
 
 .center[
-&lt;img src = "https://www.pyimagesearch.com/wp-content/uploads/2016/08/simple_neural_network_header.jpg" height = 300px/&gt;
+  &lt;img height = 300 width = 475 src = figures/backprop.png /&gt;
 ]
-[source](https://www.pyimagesearch.com/wp-content/uploads/2016/08/simple_neural_network_header.jpg)
+
+---
+## Training is hard
+
+.pull-left.middeling[
+Neural nets are made up of lots of parameters that need to be tuned and thus they need lots of data.
+
+In addition, the optimization is non-convex.
+
+These combine to make training computationally rigerous.
+]
+
+.pull-right[
+  &lt;img height = 400 width = 350 src = figures/convex_optimization.png /&gt;
+]
 
 ---
 ## Recurrent Neural Networks
 
-- Deals with correlation in successive inputs by 'remembering' what it saw at the previous input. 
-
-.center[
-&lt;img src = "http://livefreeordichotomize.com/lstm_explainer/hidden_to_hidden.png" height = 400px/&gt;
+.pull-left[
+- Recurrent Nueral Networks (RNNs) deals with correlation in successive inputs by 'remembering' what it saw at the previous input. 
+  
+- Does this by feeding the values of its hidden layers to themselves at the next timestep. 
+  
+- Surprisingly, this cyclical connection doesn't break back-propigation...
 ]
 
+.pull-right.center[
+&lt;img src = "figures/rnn_compact.png" height = 400px/&gt;
+]
+
+---
+## RNN Problems
+
+.pull-left[
+
+- RNNs are actually feedforward neural networks, that fix the weights of many hidden layers to be the same as each other.
+
+- When you multiply a state by a weight matrix many time(-steps) in a row you cause its values to either diverge to infinity or shrink to zero. This is known as the exploading and vanishing gradient problem.   
+
+- This problem makes training RNNs to learn long-term time dependencies very hard. 
+    - Luckily, there are solutions. 
+]
+
+.pull-right.center[
+&lt;img src = "https://deeplearning4j.org/img/sigmoid_vanishing_gradient.png" height = 300px/&gt;
+
+.small[[source](https://deeplearning4j.org)]
+]
 
 ---
 ## Long Short Term Memory models
 
-- RNNs are trained by back propagating through their unrolled computational graph.
-- Because of how backprop works this means repeated multiplication of the gradients, causing them to explode or vanish. 
-- LSTMs prevent these problems by adding 'gates' that can decide to let through information/ control the flow of the gradient back in time. 
+- LSTMs help control the exploading and vanishing gradient prblem by adding 'gates' that can decide to let through information/ control the flow of the gradient back in time. 
+
+- These gates act as mediators for information flow, deciding when the hidden state should be added to, deleted from, and what it should pass on to the next layer. 
 
 .center[
-&lt;img src = "http://livefreeordichotomize.com/lstm_explainer/lstm_block.png" height = 400px/&gt;
+&lt;img src = "http://livefreeordichotomize.com/lstm_explainer/lstm_block.png" height = 320px/&gt;
 ]
+
+.small[[LSTMs as told by Baseball](http://livefreeordichotomize.com/2017/11/08/lstm-neural-nets-as-told-by-baseball/)]
 
 ---
 ## Code example
 
-Train an LSTM to generate musings from Frank Harrell. Is told no words, just character level information. 
+Here we train an LSTM to generate musings from Frank Harrell. The model doesn't know what a word is, it is only fed sequences of characters.
 
 
 ```r
@@ -156,32 +235,61 @@ model %&gt;% compile(
 &gt; ... subject the probabilities of x = 0.36 = (t) = 0.5528 and survival probable procedures as the residuals with the ordinal probability that the subset from the sample can also be two model predicted residuals and allow as a transformation conved in the full model and the full model
 
 ---
-class: middle
-## Convolutional add-ons
+## Convolutional Networks
 
-.pull-left[
-- Slide a 'feature detector' over the data to be fed into RNN.  
-- Much like a sliding window approach, but this time the model decides the aggregation function.
-- Used extensively in computer vision. 
+.pull-left.middeling[
+- Slides feature detectors sequentially over data to detect features.
+
+- Further layers aggregate those features and make decisions based on their occurance/position.
+
+- Avoids gradient problems from RNNs. 
 ]
 .pull-right[
 &lt;img src = "http://deeplearning.net/software/theano_versions/dev/_images/arbitrary_padding_no_strides_transposed.gif" height = 400px/&gt;
 ]
 
+---
+
+.middle.center[&lt;img height = 650 src = figures/convolutional_explainer.jpeg /&gt;]
+
+---
+class: middle
+## Convolutional vs Reccurent
+
+
+In his book _Deep Learning with Python_, Francois Chollet (author of the deep learning library, Keras), gives the following advice on using RNNs or CNNs for sequence tasks. 
+
+&gt; If global order matters... then it is preferable to use a recurrent network... if global ordering isnt fundementally meaningful then 1d convnets will work at least as well and are cheaper. 
+
+.small[Why not get the benefits of both...]
+
+---
+class: middle
+## Convolutional Recurrent Networks
+
+.pull-left.middeling[
+- Feed the output from a CNN 'feature detector' over the data to be fed into RNN.  
+
+- Much like a sliding window approach, but this time the model decides the aggregation function.
+]
+.pull-right[
+&lt;img src = "http://files.abstractsonline.com/CTRL/11/d/ae1/2c4/71a/4e1/59a/ff6/988/f89/557/1b/g21042_1.png" height = 400px/&gt;
+]
+
 
 
 ---
-### Example case of wearable data
+## Example case of wearable data
 
 
-.pull-left[
+.pull-left.middeling[
 
 Pletcher et al. released an [abstract](http://www.abstractsonline.com/pp8/#!/4412/presentation/45220) showing they had developed a high accuracy classifier for cardiovascular risk and sleep apnea using just heart rate and step counts from an apple watch. 
 
 They used a stack of 1d convolution followed by LSTM. 
 ]
-.pull-right[
-&lt;img src = "http://files.abstractsonline.com/CTRL/11/d/ae1/2c4/71a/4e1/59a/ff6/988/f89/557/1b/g21042_1.png" height = 400px/&gt;
+.pull-right.middeling[
+&lt;img src = "https://cdn.vox-cdn.com/thumbor/QlG_H9gwZuRMbganWSVXori9usA=/0x0:3000x1688/920x613/filters:focal(1260x604:1740x1084)/cdn.vox-cdn.com/uploads/chorus_image/image/54787219/App1500x844.0.png" height = 270px/&gt;
 ]
 
 ---
@@ -192,54 +300,68 @@ class: inverse, center, middle
 ---
 ## Sparse classification problem
 
-- A lot of data, especially human data, has sparse/ inexact labels. 
+A lot of data, especially human data, has sparse/ inexact labels. 
 
-![](figures/sparse_tags.png)
+.center[&lt;img height=350 src="figures/sparse_tags.png" /&gt;]
+
+How can we deal with this?
 
 ---
-## Sparse classification solution
 
-- Semi-Supervised learning. 
-- Train an unsupervised model on all available data to find patterns in data
-  - Which type? 
-- Train supervised model on top of the unsupervised layers. 
+### Semi-Supervised learning
 
-.center[
+.pull-left.middeling[
+One way is to train an unsupervised model on all available data to find patterns in data
+
+.small[What type of unsupervised model?]
+  
+Then we can train a supervised model on top of the unsupervised models layers.
+]
+
+.pull-right.center[
   &lt;img src = "https://upload.wikimedia.org/wikipedia/commons/d/d0/Example_of_unlabeled_data_in_semisupervised_learning.png" height = 350px/&gt;
+  
+  .small[[source](https://upload.wikimedia.org/wikipedia/commons/d/d0/Example_of_unlabeled_data_in_semisupervised_learning.png)]
 ]
 
 ---
 ## Computational obstacles
 
-- This flexibility has a cost, lots of parameters. 
-- In order to backpropigate the computational graph needs to be unrolled limiting parallelization.
+.pull-left.middeling[
+__Parameters:__ The flexability of neural networks comes at a cost: lots of parameters. 
 
-.center[
-![](https://www.cyberciti.biz/media/new/cms/2016/10/cat-intrns.jpg)
+__Parallelization:__ For RNNs, in order to backpropagate, the computational graph needs to be unrolled limiting parallelization (back propigation through time).
 ]
-_I googled "computer working hard." [source](https://www.cyberciti.biz/media/new/cms/2016/10/cat-intrns.jpg)_
+.pull-right.center[
+![](figures/rnn_unrolled.png)
+
+.small[Unrolled RNN computational graph.]
+]
 
 ---
 ## Computational obstacles solutions
 
 .pull-left[
 __Parameters__
-  - RNNs reduce parameter numbers by weight sharing but have the aforementioned exploding/vanishing gradient problem
-  - LSTMs help with the vanishing/exploding gradient problem but introduce even more parameters. 
-  - We can also regularize (L2, L1, ...) but care needs to be taken. 
+- Architectures like RNNs and CNNs reduce parameter numbers by weight sharing but have the aforementioned problems.
+  
+- LSTMs help with the vanishing/exploding gradient problem but introduce even more parameters. 
+  
+- We can also regularize (L2, L1, ...) but care needs to be taken. 
 ]
 
 .pull-right[
 __Parallelization__
-  - We can truncate our sequence length (but we know why that is dangerous)
-  - Some newer architectures forgo RNNs and use exclusively CNNs (Dilated ConvNets) and are thus parallelizable.
+- We can truncate our sequence length (but we know why that is dangerous.)
 
+- Switch to an entirely convolutional framework to avoid the problems with back propigation through time. 
 ]
 
 ---
+class: middle
 ## Inference
 
-How can we possibly get any insite out of a giant hairball potentially millions of weights and abundent overfitting?
+Can we get any insight out of a giant hairball of potentially millions of weights?
 
 .center[
   &lt;img src = "https://bbcomp.ini.rub.de/bbcomp-logo.png" height = 250px/&gt;
@@ -252,10 +374,10 @@ _[source](https://bbcomp.ini.rub.de/bbcomp-logo.png)_
 
 - Investigate _what_ the model learns by tracing the function compositions. 
 - Generalized Adversarial Networks can help with this. 
-- We need a disciplined way of doing this. 
+- A disciplined way of doing this is needed. 
 
 .center[
-  &lt;img src = "figures/feature_viz.png" height = 350px/&gt;
+  &lt;img src = "figures/feature_viz.png" width = 650/&gt;
 ]
 _Distil.pub's [feature visualization article](https://distill.pub/2017/feature-visualization/)_
 
@@ -263,7 +385,7 @@ _Distil.pub's [feature visualization article](https://distill.pub/2017/feature-v
 ## Causality
 
 - Much like the bias-variance tradeoff in the sequence learning world there is a causality-accuracy tradeoff. 
-- If we let the model look forward in time we [tend to get much better performance](https://arxiv.org/abs/1606.06871)
+- If we let the model look forward in time we [tend to get much better performance](https://arxiv.org/abs/1606.06871).
 - However, if we want to either stream live data or attempt to make causal inferences we can't allow going forward in time. 
 
 .center[
@@ -276,10 +398,11 @@ _[source](http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/bidire
 
 .pull-left[
 - What happens when a user takes off their fitbit to charge or a patient misses a scheduled appointment?
-- Simple RNNs make the assumption of evenly spaced time intervals. 
+- Simple RNNs and CNNs make the assumption of evenly spaced time intervals. 
   - Could get around this by feeding info on the time since last visit/ input, but then we have more parameters. 
   - Imputation by unsupervised model is another potential, but may have un-obvious feedback effects. 
-  - Lots to learn from biostats here.
+     - Denoising autoencoders, etc.
+- Lots to learn from biostats here.
 
 ]
 
@@ -316,7 +439,8 @@ Wang, Z., &amp; Oates, T. (2015, May 31). Imaging Time-Series to Improve Classif
 "highlightLines": true,
 "countIncrementalSlides": false
 });
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({

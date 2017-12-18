@@ -5,3 +5,12 @@ body {
 .small { 
   font-size: 70%;
 }
+
+.highlight {
+  color: steelblue;
+  font-weight: bold;
+}
+
+.middeling {
+  padding-top: 15%;
+}
