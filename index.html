@@ -390,6 +390,16 @@ __Parallelization__
 ]
 
 ---
+## A potential saviour
+
+
+- The dialated convolution approach to CNNs is being used by google in their new [Wavenet](https://deepmind.com/blog/wavenet-generative-model-raw-audio/) architecture. 
+
+- It seems to solve both the issues with CNNs (insensitivity to global order), while still being fast to train/run. 
+
+![](http://sergeiturukin.com/assets/2017-02-23-155956_803x294_scrot.png)
+
+---
 class: middle
 ## Inference
 
@@ -447,13 +457,13 @@ _[source](http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/bidire
 ## Areas I find interesting
 
 - Building architectures that can handle heterogeneous input sources without any conversion to numerics.
-    - Have a seperate input layer on all data sources and allow the model to combine them.
+    - Have a separate input layer on all data sources and allow the model to combine them.
 
-- Informative priors for bayesian networks. 
-    - We have transfer learning, but why not use transfer learning models to build priors for bayesian models?
+- Informative priors for Bayesian networks. 
+    - We have transfer learning, but why not use transfer learning models to build priors for Bayesian models?
     
 - Train a model to explain. 
-    - Similar to gans: a descriminator and an explainer. 
+    - Similar to GANs: a discriminator and an explainer. 
 
 - Combining densenets (every layer connected to every other) with RNNs to avoid gradient problems. 
     - Or combine the LSTM gates with deep feed forward networks to fix their gradient problems. 
