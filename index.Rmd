@@ -31,12 +31,13 @@ options(htmltools.dir.version = FALSE)
     - Combining CNN and RNNs
     - Example with wearable data
     - Example with EHR data
-- Problems & Possible Extensions
+- Problems & Possible Solutions
     - Sparse Classification
     - Computational Obstacles
     - Inference
     - Causality
     - Missing Data
+    - Areas I find interesting
 ]
 
 ---
@@ -320,7 +321,7 @@ class: middle
 ---
 class: inverse, center, middle
 
-# Problems & Possible Extensions
+# Problems & Possible Solutions
 
 ---
 ## Sparse classification problem
@@ -438,10 +439,24 @@ _[source](http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/bidire
 ]
 
 ---
+## Areas I find interesting
+
+- Building architectures that can handle heterogeneous input sources without any conversion to numerics.
+    - Have a seperate input layer on all data sources and allow the model to combine them.
+
+- Informative priors for bayesian networks. 
+    - We have transfer learning, but why not use transfer learning models to build priors for bayesian models?
+    
+- Train a model to explain. 
+    - Similar to gans: a descriminator and an explainer. 
+
+- Combining densenets (every layer connected to every other) with RNNs to avoid gradient problems. 
+    - Or combine the LSTM gates with deep feed forward networks to fix their gradient problems. 
+
+---
 class: inverse, center, middle
 
 # Questions?
-
 
 ---
 ### Bibliography
